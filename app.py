@@ -500,14 +500,4 @@ st.markdown("""
     © 2024 AuraSight AI | Unlocking Structured Data from Unstructured Documents
 </div>
 """, unsafe_allow_html=True)
-```
 
-### **File 2: requirements.txt**
-```
-streamlit==1.28.0
-openai==0.28.0
-stripe==6.7.0
-pandas==2.1.2
-PyPDF2==3.0.1
-Pillow==10.1.0
-supabase==2.0.0
