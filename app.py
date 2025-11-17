@@ -151,7 +151,7 @@ st.markdown("""
 with st.sidebar:
     st.markdown("### ⚡ Navigation")
     page = st.radio(
-        "",
+        "Choose a page",
         ["🏠 Process Invoice", "💎 Pricing", "📊 Dashboard", "🚀 API Access", "❓ Help"],
         label_visibility="collapsed"
     )
