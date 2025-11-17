@@ -259,7 +259,7 @@ if page == "🏠 Process Invoice":
             extracted_data = json.loads(response.choices[0].message.content)
             
             # Step 3: Complete
-            progress.progress(100, text="Complete!")  ← CORRECT (aligned)
+            progress.progress(100, text="Complete!") 
             st.session_state.processed_docs += 1
         
         # Display Results
