@@ -235,31 +235,31 @@ if page == "🏠 Process Invoice":
             progress.progress(60, text="Extracting data with AI...")
             
             # OpenAI API call
-messages = [
-    {"role": "system", "content": """You are an expert at extracting data from invoices. 
-    Extract all information and return as JSON with these fields:
-    - invoice_number, invoice_date, due_date
-    - vendor (name, address, email, phone)
-    - customer (name, address)
-    - line_items (array of: description, quantity, unit_price, total)
-    - subtotal, tax_amount, total_amount
-    - payment_terms, notes"""},
-    {"role": "user", "content": f"Extract data from this invoice:\n{text[:3000]}"}
-]
-
-response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=messages,
-    temperature=0.1,
-    max_tokens=2000
-)
-
-# Parse response
-progress.progress(90, text="Formatting results...")
-extracted_data = json.loads(response.choices[0].message.content)
+            messages = [
+                {"role": "system", "content": """You are an expert at extracting data from invoices. 
+                Extract all information and return as JSON with these fields:
+                - invoice_number, invoice_date, due_date
+                - vendor (name, address, email, phone)
+                - customer (name, address)
+                - line_items (array of: description, quantity, unit_price, total)
+                - subtotal, tax_amount, total_amount
+                - payment_terms, notes"""},
+                {"role": "user", "content": f"Extract data from this invoice:\n{text[:3000]}"}
+            ]
+            
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                temperature=0.1,
+                max_tokens=2000
+            )
+            
+            # Parse response
+            progress.progress(90, text="Formatting results...")
+            extracted_data = json.loads(response.choices[0].message.content)
             
             # Step 3: Complete
-            progress.progress(100, text="Complete!")
+            progress.progress(100, text="Complete!")  ← CORRECT (aligned)
             st.session_state.processed_docs += 1
         
         # Display Results
