@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import stripe
 import pandas as pd
 import json
@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 # Initialize Clients
-openai.api_key = st.secrets["OPENAI_KEY"]
+client = OpenAI(api_key=st.secrets["OPENAI_KEY"])
 stripe.api_key = st.secrets["STRIPE_SECRET"]
 STRIPE_PUBLIC = st.secrets["STRIPE_PUBLIC"]
 supabase: Client = create_client(
@@ -235,28 +235,28 @@ if page == "🏠 Process Invoice":
             progress.progress(60, text="Extracting data with AI...")
             
             # OpenAI API call
-            messages = [
-                {"role": "system", "content": """You are an expert at extracting data from invoices. 
-                Extract all information and return as JSON with these fields:
-                - invoice_number, invoice_date, due_date
-                - vendor (name, address, email, phone)
-                - customer (name, address)
-                - line_items (array of: description, quantity, unit_price, total)
-                - subtotal, tax_amount, total_amount
-                - payment_terms, notes"""},
-                {"role": "user", "content": f"Extract data from this invoice:\n{text[:3000]}"}
-            ]
-            
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=messages,
-                temperature=0.1,
-                max_tokens=2000
-            )
-            
-            # Parse response
-            progress.progress(90, text="Formatting results...")
-            extracted_data = json.loads(response.choices[0].message.content)
+messages = [
+    {"role": "system", "content": """You are an expert at extracting data from invoices. 
+    Extract all information and return as JSON with these fields:
+    - invoice_number, invoice_date, due_date
+    - vendor (name, address, email, phone)
+    - customer (name, address)
+    - line_items (array of: description, quantity, unit_price, total)
+    - subtotal, tax_amount, total_amount
+    - payment_terms, notes"""},
+    {"role": "user", "content": f"Extract data from this invoice:\n{text[:3000]}"}
+]
+
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=messages,
+    temperature=0.1,
+    max_tokens=2000
+)
+
+# Parse response
+progress.progress(90, text="Formatting results...")
+extracted_data = json.loads(response.choices[0].message.content)
             
             # Step 3: Complete
             progress.progress(100, text="Complete!")
